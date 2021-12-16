@@ -1,5 +1,6 @@
 import React from 'react';
-import {TouchableOpacityFocusTest} from './TouchableOpacityFocusTest';
+import {TouchableOpacityFocusTest} from './src/TouchableOpacityFocusTest';
+import {PressableFocusTest} from './src/PressableFocusTest';
 
 const App = () => {
   return <TouchableOpacityFocusTest />;

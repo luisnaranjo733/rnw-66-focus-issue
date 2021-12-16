@@ -1,8 +1,8 @@
-import React, {useMemo, useState} from 'react';
+import React, {useMemo, useRef, useState} from 'react';
 import {useEffect} from 'react';
 import {forwardRef} from 'react';
-import {TouchableOpacity} from 'react-native';
-import {View, StyleSheet, Text, FlatList} from 'react-native';
+import {Pressable} from 'react-native';
+import {View, StyleSheet, Text, FlatList, InteractionManager} from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -50,14 +50,13 @@ const TestItem = forwardRef(function InnerTestItem({title, onPress}, ref) {
     setFocused(false);
   };
   const focusedStyle = focused ? { backgroundColor: 'white'} : null;
-  return (
-    <TouchableOpacity style={[styles.item, focusedStyle]} onPress={onPress} ref={ref} onFocus={onFocus} onBlur={onBlur}>
+
+  return <Pressable style={[styles.item, focusedStyle]} onPress={onPress} ref={ref} onFocus={onFocus} onBlur={onBlur}>
       <Text style={styles.title}>{title}</Text>
-    </TouchableOpacity>
-  );
+  </Pressable>
 });
 
-export const TouchableOpacityFocusTest = () => {
+export const PressableFocusTest = () => {
   const length = DATA.length;
   const inputRefs = useMemo(
     () =>
@@ -76,11 +75,20 @@ export const TouchableOpacityFocusTest = () => {
   };
 
   useEffect(() => {
-    const defaultFocusedIndex = 0;
-    const defaultFocusedItem = inputRefs[defaultFocusedIndex];
-    console.log('focusing the following component: ', defaultFocusedItem.current);
-    defaultFocusedItem.current?.focus();
+    const callback = () => {
+      const defaultFocusedIndex = 0;
+      const defaultFocusedItem = inputRefs[defaultFocusedIndex];
+      console.log('focusing the following component: ', defaultFocusedItem.current);
+      defaultFocusedItem.current?.focus();
+    };
+
+    // executing the callback immediately does not work
+    // callback();
+
+    // works if you set a timeout of 1ms
+    setTimeout(callback, 1);
   }, [inputRefs]);
+
 
   return (
     <View style={styles.container}>

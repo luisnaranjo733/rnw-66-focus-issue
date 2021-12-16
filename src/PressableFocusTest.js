@@ -57,29 +57,24 @@ const TestItem = forwardRef(function InnerTestItem({title, onPress}, ref) {
 });
 
 export const PressableFocusTest = () => {
-  const length = DATA.length;
-  const inputRefs = useMemo(
-    () =>
-      Array(length)
-        .fill(0)
-        .map(() => React.createRef()),
-    [length],
-  );
+  const defaultFocusIndex = 1;
+  const defaultFocusRef = useRef();
 
   const renderItem = ({item, index}) => {
-    const ref = inputRefs[index];
+    // Only grab the ref if the index is right
+    const ref = index === defaultFocusIndex ? defaultFocusRef : undefined;
+
     const onPress = () => {
       console.log(item);
     };
+
     return <TestItem title={item.title} onPress={onPress} ref={ref} />;
   };
 
   useEffect(() => {
     const callback = () => {
-      const defaultFocusedIndex = 0;
-      const defaultFocusedItem = inputRefs[defaultFocusedIndex];
-      console.log('focusing the following component: ', defaultFocusedItem.current);
-      defaultFocusedItem.current?.focus();
+      console.log('focusing the following component: ', defaultFocusRef.current);
+      defaultFocusRef.current?.focus();
     };
 
     // executing the callback immediately does not work
@@ -87,7 +82,7 @@ export const PressableFocusTest = () => {
 
     // works if you set a timeout of 1ms
     setTimeout(callback, 1);
-  }, [inputRefs]);
+  }, []);
 
 
   return (

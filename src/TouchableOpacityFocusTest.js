@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {useEffect} from 'react';
 import {forwardRef} from 'react';
 import {TouchableOpacity} from 'react-native';
@@ -27,15 +27,15 @@ const styles = StyleSheet.create({
 const DATA = [
   {
     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
+    title: 'Merry',
   },
   {
     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
+    title: 'Christmas',
   },
   {
     id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
+    title: '!!!',
   },
 ];
 
@@ -49,7 +49,7 @@ const TestItem = forwardRef(function InnerTestItem({title, onPress}, ref) {
     console.log(`onBlur: ${title}`)
     setFocused(false);
   };
-  const focusedStyle = focused ? { backgroundColor: 'white'} : null;
+  const focusedStyle = focused ? { backgroundColor: 'white'} : null;``
   return (
     <TouchableOpacity style={[styles.item, focusedStyle]} onPress={onPress} ref={ref} onFocus={onFocus} onBlur={onBlur}>
       <Text style={styles.title}>{title}</Text>
@@ -58,29 +58,24 @@ const TestItem = forwardRef(function InnerTestItem({title, onPress}, ref) {
 });
 
 export const TouchableOpacityFocusTest = () => {
-  const length = DATA.length;
-  const inputRefs = useMemo(
-    () =>
-      Array(length)
-        .fill(0)
-        .map(() => React.createRef()),
-    [length],
-  );
+  const defaultFocusIndex = 1;
+  const defaultFocusRef = useRef();
 
   const renderItem = ({item, index}) => {
-    const ref = inputRefs[index];
+    // Only grab the ref if the index is right
+    const ref = index === defaultFocusIndex ? defaultFocusRef : undefined;
+
     const onPress = () => {
       console.log(item);
     };
+
     return <TestItem title={item.title} onPress={onPress} ref={ref} />;
   };
 
   useEffect(() => {
     const callback = () => {
-      const defaultFocusedIndex = 0;
-      const defaultFocusedItem = inputRefs[defaultFocusedIndex];
-      console.log('focusing the following component: ', defaultFocusedItem.current);
-      defaultFocusedItem.current?.focus();
+      console.log('focusing the following component: ', defaultFocusRef.current);
+      defaultFocusRef.current?.focus();
     };
 
     // executing the callback immediately does not work
@@ -88,7 +83,7 @@ export const TouchableOpacityFocusTest = () => {
 
     // works if you set a timeout of 1ms
     setTimeout(callback, 1);
-  }, [inputRefs]);
+  }, []);
 
   return (
     <View style={styles.container}>

@@ -79,11 +79,11 @@ export const App = () => {
 
     // FAILURE
     // executing the callback immediately does not work
-    // callback();
+    callback();
 
     // HACKY WORKAROUND
     // works if you set a timeout of 1ms
-    setTimeout(callback, 1);
+    // setTimeout(callback, 1);
   }, []);
 
   /**

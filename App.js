@@ -79,22 +79,22 @@ export const App = () => {
 
     // FAILURE
     // executing the callback immediately does not work
-    callback();
+    // callback();
 
     // HACKY WORKAROUND
     // works if you set a timeout of 1ms
-    // setTimeout(callback, 1);
+    setTimeout(callback, 1);
   }, []);
 
   /**
-   * Expected result:
+   * Expected result from launching the app (don't touch anything to avoid tampering with default focus, just watch it go):
    * - First box should be red (not focused)
    * - Second box should be white (focused)
    * - Third box should be red (not focused)
    */
 
   /**
-   * Actual result:
+   * Actual result from launching the app (don't touch anything to avoid tampering with default focus, just watch it go):
    * - All 3 boxes are red (indicating that none of them receive initial focus)
    * - You can workaround this but hitting the TAB bar on PC, but this is not recoverable on Xbox. Not a good experience for either platform.
    */
